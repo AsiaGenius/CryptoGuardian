@@ -40,21 +40,7 @@ Check out all available features. There are no additional features. All features
     * - Status Log
       - Instructions to transform the message sent by the device to a simple 
         key-value JSON structure.
-      - .. code-block:: json
-
-            {
-              "op": "move",
-              "from": "/data/Modbus_Handler/0/bv",
-              "path": "/temperature",
-              "optional": true
-            }
-        
-        Keep in mind that this JSON should be "stringified", i.e., all special
-        caracters should be escaped. 
-        
-        This follows the `JSON patch`_ definitions with one important
-        difference: if the patch can't be applied (because the message has no
-        such attribute), the procedure won't fail.
+      - teste
 
 
 How to build
