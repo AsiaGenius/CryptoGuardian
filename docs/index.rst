@@ -17,15 +17,46 @@ CryptoGuardian is a shield for Ragnarok Online and also for some other games tha
    manage
 
 
-How does it work
+Features
 ================
 
-iotagent-json depends on two things: a Kafka broker, so that it can receive
-messages informing it about new devices (and, in extension, about their updates
-and removals), and a MQTT broker, so that it can receive messages from the
-devices. It waits for messages sent through these two elements: from the device
-manager with a management operation on a device and from the MQTT broker with a
-message sent by a device.
+Essas são todas as features disponíveis atualmente
+
+.. list-table:: Device attributes for iotagent-json
+    :header-rows: 1
+
+    * - Feature
+      - Description
+      - Use Case
+    * - GRF Protection
+      - Protect all GRFs against edit. When updating some GRF the administrator must update the HASH in the dashboard.
+		- GRF Edit
+		- NoDelay
+		- Animation NoDelay
+    * - Packet Encryption
+      - When encrypting bot users, bots can not log in. Packet manipulating tools will also be broken.
+      - ``/admin/efac/configuration``
+    * - id-location
+      - Where can the physical device identifier be located.
+      - Check `ID-location structure table`_.
+    * - translator
+      - Instructions to transform the message sent by the device to a simple 
+        key-value JSON structure.
+      - .. code-block:: json
+
+            {
+              "op": "move",
+              "from": "/data/Modbus_Handler/0/bv",
+              "path": "/temperature",
+              "optional": true
+            }
+        
+        Keep in mind that this JSON should be "stringified", i.e., all special
+        caracters should be escaped. 
+        
+        This follows the `JSON patch`_ definitions with one important
+        difference: if the patch can't be applied (because the message has no
+        such attribute), the procedure won't fail.
 
 
 How to build
