@@ -38,26 +38,8 @@ Check out all available features. There are no additional features. All features
       - Where can the physical device identifier be located.
       - Check `ID-location structure table`_.
     * - Status Log
-      - Instructions to transform the message sent by the device to a simple 
-        key-value JSON structure.
-	* - Dump Database
-      - Instructions to transform the message sent by the device to a simple 
-        key-value JSON structure.
-	* - Heuristic Database
-      - Instructions to transform the message sent by the device to a simple 
-        key-value JSON structure.
-	* - Block DLL Injection
-      - Instructions to transform the message sent by the device to a simple 
-        key-value JSON structure.
-	* - HWID BAN
-      - Instructions to transform the message sent by the device to a simple 
-        key-value JSON structure.
-	* - Account Variables
-      - Instructions to transform the message sent by the device to a simple 
-        key-value JSON structure.
-	* - Enable/Disable Command
-      - Instructions to transform the message sent by the device to a simple 
-        key-value JSON structure.
+      - Instructions to transform the message sent by the device to a simple key-value JSON structure.
+	
 		
 How to build
 ============
