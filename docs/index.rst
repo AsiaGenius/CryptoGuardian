@@ -29,8 +29,8 @@ Check out all available features. There are no additional features. All features
       - Description
       - Use Case
     * - GRF Protection
-      - Topic to which the device will publish messages.
-      - ``/admin/efac/attrs``
+      - Protects all GRFs from the folder. Through a HASH. Even GRF protected with passwords (GRF Editor) you can use NoDelay or Animation Sprite Delay.
+      - Blocks ``GRF edit`` or ``NoDelay`` install (remove sprite animation or change mob sprite method).
     * - Packet Crypt
       - Topic from which the device will accept actuation messages.
       - ``/admin/efac/configuration``
