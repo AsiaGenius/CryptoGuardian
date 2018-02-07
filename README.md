@@ -17,9 +17,4 @@ You can get support by contacting someone with the **DevTeam** tag in the discor
 
 Packet Transmission Schema:
 
-```mermaid
-graph LR
-A[hexed.exe] -- Encrypted Packets --> B((ring.dll))
-A[hexed.exe] -- license check --> C((Google Cloud))
-B{ring.dll} --Validated--> A{hexed.exe}
-C --> D{emulator}
+![enter image description here](https://image.prntscr.com/image/OGbL2IxeR_2EOCAl8HrLIQ.png)
