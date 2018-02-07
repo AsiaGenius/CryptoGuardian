@@ -55,41 +55,28 @@ Check out all available features. There are no additional features. All features
 
 
 
-How to build
+How to Install
 ============
 
-As this is a npm-based project, building it is as simple as
+Check out the guides and tips. Separate the order of guides below for easy installation
 
 .. code-block:: bash
 
-    npm install
-    npm run-script build
+    1 - Install Hexed
+	2 - Install Emulator
+	3 - Dashboard Setup
+	4 - Renewing (Buying Days)
+
+For questions, report your question to ``DevTeam`` on Discord
 
 
-If everything runs fine, the generated code should be in ``./build`` folder.
-
-How to run
-==========
-
-As simple as:
-
-.. code-block:: bash
-
-    npm run-script start ./config.json
-
-
-Remember that you should already have a Kafka node (with a zookeeper instance)
-and a MQTT broker (such as `Eclipse Mosquitto`_)
-
-How do I know if it is working properly?
+How it works?
 ----------------------------------------
+CryptoGuardian is a protection that is activated using ETH (ethereum) a currency similar to bitcoin. 
+To use the CryptoGuardian services you must have ETH to perform the transactions. 
+To buy ETH follow the links described in the glossary or find some reliable seller.
+CryptoGuardian does not have monthly payment, we sell only the day, the user can buy as many days as he needs.
 
-Simply put: you won't. In fact you can implement a simple Kafka publisher to
-emulate the behaviour of a device manager instance and a listener to check what
-messages it is generating. But it seems easier to get the real components -
-they are not that hard to start and to use (given that you use dojot's
-`docker-compose`_). Check also `DeviceManager documentation`_ for further
-information about how to create a new device.
 
 
 .. |License badge| image:: https://img.shields.io/badge/license-GPL-blue.svg
