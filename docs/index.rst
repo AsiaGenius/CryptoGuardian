@@ -1,8 +1,8 @@
 =============
-iotagent-json
+CryptoGuardian - The real protection
 =============
 
-|License badge| |Docker badge| |Travis badge|
+
 
 IoT agents are responsible for receiving messages from physical devices
 (directly or through a gateway) and sending them commands in order to configure
