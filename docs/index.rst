@@ -11,10 +11,10 @@ CryptoGuardian is a shield for Ragnarok Online and also for some other games tha
    :caption: Contents:
    :glob:
 
-	install
-	emulator
-	dashboard
-	manage
+   install
+   emulator
+   dashboard
+   manage
 
 
 How does it work
