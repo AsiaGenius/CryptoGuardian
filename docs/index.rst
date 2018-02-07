@@ -41,6 +41,23 @@ Check out all available features. There are no additional features. All features
       - Instructions to transform the message sent by the device to a simple 
         key-value JSON structure.
       - teste
+    * - Status Log
+      - Instructions to transform the message sent by the device to a simple 
+        key-value JSON structure.
+      - teste
+    * - Status Log
+      - Instructions to transform the message sent by the device to a simple 
+        key-value JSON structure.
+      - teste
+    * - Status Log
+      - Instructions to transform the message sent by the device to a simple 
+        key-value JSON structure.
+      - teste
+    * - Status Log
+      - Instructions to transform the message sent by the device to a simple 
+        key-value JSON structure.
+      - teste
+
 
 
 How to build
