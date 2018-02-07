@@ -71,7 +71,7 @@ For questions, report your question to ``DevTeam`` on Discord
 
 
 How it works?
-----------------------------------------
+============
 CryptoGuardian is a protection that is activated using ETH (ethereum) a currency similar to bitcoin. 
 To use the CryptoGuardian services you must have ETH to perform the transactions. 
 To buy ETH follow the links described in the glossary or find some reliable seller.
