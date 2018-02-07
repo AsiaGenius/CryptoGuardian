@@ -4,19 +4,17 @@ CryptoGuardian - The real protection
 
 
 
-IoT agents are responsible for receiving messages from physical devices
-(directly or through a gateway) and sending them commands in order to configure
-them. This iotagent-json, in particular, receives messages via MQTT with JSON
-payloads.
+CryptoGuardian is a shield for Ragnarok Online and also for some other games that use Sockets.
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
    :glob:
 
-   concepts
-   operation
-   building-documentation
+	install
+	emulator
+	dashboard
+	manage
 
 
 How does it work
