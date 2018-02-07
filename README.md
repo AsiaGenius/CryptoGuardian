@@ -18,3 +18,9 @@ You can get support by contacting someone with the **DevTeam** tag in the discor
 Packet Transmission Schema:
 
 ![enter image description here](https://image.prntscr.com/image/OGbL2IxeR_2EOCAl8HrLIQ.png)
+
+
+## Link Base
+Site: https://cryptoguardian.net
+Discord: https://discord.gg/EKPPvxc
+Docs: http://docs.cryptoguardian.net
