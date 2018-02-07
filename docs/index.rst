@@ -62,7 +62,7 @@ Check out the guides and tips. Separate the order of guides below for easy insta
 
 .. code-block:: bash
 
-    1 - Install Hexed
+	1 - Install Hexed
 	2 - Install Emulator
 	3 - Dashboard Setup
 	4 - Renewing (Buying Days)
