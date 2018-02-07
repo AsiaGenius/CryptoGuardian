@@ -22,7 +22,7 @@ Features
 
 Check out all available features. There are no additional features. All features are available to all.
 
-.. list-table:: attributes for cryptoguardian
+.. list-table:: attributes for cryptoguardian shield
     :header-rows: 1
 
     * - Feature
