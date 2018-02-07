@@ -32,31 +32,26 @@ Check out all available features. There are no additional features. All features
       - Protects all GRFs from the folder. Through a HASH. Even GRF protected with passwords (GRF Editor) you can use NoDelay or Animation Sprite Delay.
       - Blocks ``GRF edit`` or ``NoDelay`` install (remove sprite animation or change mob sprite method).
     * - Packet Crypt
-      - Topic from which the device will accept actuation messages.
-      - ``/admin/efac/configuration``
+      - Through cryptography, packets are protected against interceptions.
+      - ``PE, RPE, WPE`` and also ``BOT (openkore)``.
     * - Cheats Log
-      - Where can the physical device identifier be located.
-      - Check `ID-location structure table`_.
+      - Saves all logs in the GameGuard folder. The logs are sent to the emulator via packets.
+      - Know who uses tools. 
     * - Status Log
-      - Instructions to transform the message sent by the device to a simple 
-        key-value JSON structure.
-      - teste
+      - Find out the current status of shield loading.
+      - Help players in game problems.
     * - Dump Database
-      - Instructions to transform the message sent by the device to a simple 
-        key-value JSON structure.
-      - teste
+      - Hexadecimal reading of cheat signatures.
+      - Protect yourself against known cheats (xRag, xLike, and others)
     * - Heuristic Database
-      - Instructions to transform the message sent by the device to a simple 
-        key-value JSON structure.
-      - teste
+      - Through behavioral logic crawls malicious programs.
+      - An additional method. Protect yourself against known cheats (xRag, xLike, and others)
     * - Block DLL Injection
-      - Instructions to transform the message sent by the device to a simple 
-        key-value JSON structure.
-      - teste
+      - Database with a list of DLLs prohibited.
+      - WPE and others
     * - Easy Enable/Disable
-      - Instructions to transform the message sent by the device to a simple 
-        key-value JSON structure.
-      - teste
+      - Using the .conf file enable or disable CryptoGuardian
+      - ``conf/cryptoguardian.conf``
 
 
 
