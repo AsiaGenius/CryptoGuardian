@@ -25,16 +25,14 @@ Essas são todas as features disponíveis atualmente
 .. list-table:: Device attributes for iotagent-json
     :header-rows: 1
 
-    * - Feature
+    * - Attribute
       - Description
-      - Use Case
-    * - GRF Protection
-      - Protect all GRFs against edit. When updating some GRF the administrator must update the HASH in the dashboard.
-		- GRF Edit
-		- NoDelay
-		- Animation NoDelay
-    * - Packet Encryption
-      - When encrypting bot users, bots can not log in. Packet manipulating tools will also be broken.
+      - Example
+    * - topic
+      - Topic to which the device will publish messages.
+      - ``/admin/efac/attrs``
+    * - topic-config
+      - Topic from which the device will accept actuation messages.
       - ``/admin/efac/configuration``
     * - id-location
       - Where can the physical device identifier be located.
