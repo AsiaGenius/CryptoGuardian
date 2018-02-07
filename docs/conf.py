@@ -45,9 +45,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'iotagent-json'
+project = u'CryptoGuardian'
 copyright = u'2018, CPqD'
-author = u'Giovanni Curiel dos Santos'
+author = u'AsiaGenius'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
