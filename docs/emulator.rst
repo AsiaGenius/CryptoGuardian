@@ -2,7 +2,7 @@
 Diff CryptoGuardian
 ========
 
-MQTT
+rAthena
 ====
 
 MQTT is a somewhat simple protocol: it follows a publish/subscriber paradigm
@@ -19,7 +19,7 @@ this subscriber. Another possibility is to create a subscription to all
 remainder tokens in the topic, such as ``/admin/#``. All messages sent to topics
 beginning with ``/admin/`` will be received by this subscriber.
 
-Kafka
+brAthena
 =====
 
 Kafka is, in fact, a project from the `Apache Foundation`_. It is a messaging
@@ -29,5 +29,19 @@ multiple subscribers belonging to the same group (and performs load-balancing
 between them), stores and replays messages, and so on. The side effect is that
 its clients are not that simple, which could be a heavy burden for tiny
 devices.
+
+Cronus
+=====
+teste
+
+
+eAmod
+=====
+teste
+
+
+rAmod
+=====
+teste
 
 .. _Apache Foundation: https://kafka.apache.org

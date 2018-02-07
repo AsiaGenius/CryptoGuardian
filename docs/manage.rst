@@ -3,80 +3,18 @@ Manage CryptoGuardian
 =========
 
 
-Configuration
-=============
+Buying Days (renewing)
+====
 
 iotagent-json configuration is pretty simple. The main and only configuration
 file is ``config.json``, placed at the repository root directory. For
 instance, the default configuration file looks like:
 
-.. code-block:: json
-
-    {
-      "mqtt": {
-        "host": "mqtt",
-        "port" : 1883,
-        "protocolId": "MQIsdp",
-        "protocolVersion": 3,
-        "secure": false,
-        "tls": {
-          "key": "certs/iotagent.key",
-          "cert": "certs/iotagent.crt",
-          "ca": [ "certs/ca.crt" ],
-          "version": "TLSv1_2_method"
-        }
-      },
-      "broker": {
-        "host": "zookeeper:2181",
-        "type": "kafka",
-        "subject": "device-data",
-        "contextBroker": "http://data-broker"
-      },
-      "device_manager": {
-        "consumerOptions": {
-          "kafkaHost" : "kafka:9092",
-          "sessionTimeout": 15000,
-          "groupId": "iotagent"
-        },
-        "inputSubject": "dojot.device-manager.device"
-      },
-      "tenancy": {
-        "manager": "http://auth:5000",
-        "subject": "dojot.tenancy",
-        "consumerOptions": {
-          "kafkaHost" : "kafka:9092",
-          "sessionTimeout": 15000,
-          "groupId": "iotagent"
-        }
-      }
-    }
 
 
 
-There are four things to configure:
-
-- MQTT: where the device messages will come from.
-
-- MQTT Security: if used (and you should be using), these are the things that
-  must be configured. They are related to the communication between iotagent-json
-  and the physical device.
-
-- Data broker: where to send device information updates. There is support for
-  Kafka (sending a message to every component that is interested in device
-  updates) and for Orion (context broker from Fiware project).
-
-- Device manager access: how the device manager will send device notifications
-  to iotagent (creation, update and removal).
-
-- Tenancy: how iotagent-json will get tenant-related information, such as which
-  are the tenants currently configured in dojot.
-
-Check `dojot documentation`_ if you don't know or don't remember all the
-components and how and why they communicate to each other.
-
-
-Receiving messages from DeviceManager via Kafka
-===============================================
+Checking Purchases Status
+====
 
 Messages containing device operations should be in this format:
 
@@ -105,8 +43,8 @@ The documentation related to this message can be found in `DeviceManager
 Messages`_. 
 
 
-Device configuration for iotagent-json
---------------------------------------
+Buying Ethereum (ETH)
+====
 
 The following device attributes are considered by iotagent-json. All these
 attributes are of ``configuration`` type and their values are in
@@ -222,8 +160,8 @@ locating the device ID, but I don't know which one to use for this message -
 thus I'll test the ``xid`` attribute from each one of them against it".
 Currently, the ``xid`` is the MQTT topic used to publish the message.
 
-Example
-*******
+How to Install Metamask
+====
 
 The following message serves as an example of a device with all attributes used
 by iotagent-json.
@@ -332,41 +270,6 @@ These configurations indicate that:
 
 
 
-Receiving messages from devices via MQTT
-========================================
-
-Any message payload sent to iotagent-json must be in JSON format. Preferably,
-they should follow a simple key-value structure, such as:
-
-.. code-block:: json
-
-    {
-      "speed": 100.0,
-      "weight": 50.2,
-      "id": "truck-001"
-    }
-
-
-If not possible, you could make use of ``translator`` attributes so that you
-get more flexibility on device message formats.
-
-Example
--------
-
-This example uses ``mosquitto_pub`` tool, available with ``mosquitto_clients``
-package. To send a message to iotagent-json via MQTT, just execute this
-command:
-
-.. code-block:: bash
-
-    mosquitto_pub -h localhost -t /admin/efac/attrs -m '{"speed" : 10}'
-
-This command will send the message containing one value for attribute
-``speed``. The device ID is ``efac``. ``-t`` flag sets the topic to which this
-message will be published.
-
-This command assumes that you are running iotagent-json in your machine (it also
-works if you use dojot's `docker-compose`_).
 
 
 .. _DeviceManager Concepts: http://dojotdocs.readthedocs.io/projects/DeviceManager/en/latest/concepts.html

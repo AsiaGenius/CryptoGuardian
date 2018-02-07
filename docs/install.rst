@@ -2,7 +2,7 @@
 Client Install CryptoGuardian 
 ========
 
-MQTT
+Step #1 Hexed DIFF
 ====
 
 MQTT is a somewhat simple protocol: it follows a publish/subscriber paradigm
@@ -19,7 +19,7 @@ this subscriber. Another possibility is to create a subscription to all
 remainder tokens in the topic, such as ``/admin/#``. All messages sent to topics
 beginning with ``/admin/`` will be received by this subscriber.
 
-Kafka
+Step #2 Folder Structure
 =====
 
 Kafka is, in fact, a project from the `Apache Foundation`_. It is a messaging
@@ -31,3 +31,6 @@ its clients are not that simple, which could be a heavy burden for tiny
 devices.
 
 .. _Apache Foundation: https://kafka.apache.org
+
+Step #3 Generate Hash
+=====
