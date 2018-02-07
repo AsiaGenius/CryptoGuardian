@@ -20,43 +20,45 @@ CryptoGuardian is a shield for Ragnarok Online and also for some other games tha
 Features
 ================
 
-Essas são todas as features disponíveis atualmente
+Check out all available features. There are no additional features. All features are available to all.
 
-.. list-table:: Device attributes for iotagent-json
+.. list-table:: attributes for cryptoguardian
     :header-rows: 1
 
-    * - Attribute
+    * - Feature
       - Description
-      - Example
-    * - topic
+      - Use Case
+    * - GRF Protection
       - Topic to which the device will publish messages.
       - ``/admin/efac/attrs``
-    * - topic-config
+    * - Packet Crypt
       - Topic from which the device will accept actuation messages.
       - ``/admin/efac/configuration``
-    * - id-location
+    * - Cheats Log
       - Where can the physical device identifier be located.
       - Check `ID-location structure table`_.
-    * - translator
+    * - Status Log
       - Instructions to transform the message sent by the device to a simple 
         key-value JSON structure.
-      - .. code-block:: json
-
-            {
-              "op": "move",
-              "from": "/data/Modbus_Handler/0/bv",
-              "path": "/temperature",
-              "optional": true
-            }
-        
-        Keep in mind that this JSON should be "stringified", i.e., all special
-        caracters should be escaped. 
-        
-        This follows the `JSON patch`_ definitions with one important
-        difference: if the patch can't be applied (because the message has no
-        such attribute), the procedure won't fail.
-
-
+	* - Dump Database
+      - Instructions to transform the message sent by the device to a simple 
+        key-value JSON structure.
+	* - Heuristic Database
+      - Instructions to transform the message sent by the device to a simple 
+        key-value JSON structure.
+	* - Block DLL Injection
+      - Instructions to transform the message sent by the device to a simple 
+        key-value JSON structure.
+	* - HWID BAN
+      - Instructions to transform the message sent by the device to a simple 
+        key-value JSON structure.
+	* - Account Variables
+      - Instructions to transform the message sent by the device to a simple 
+        key-value JSON structure.
+	* - Enable/Disable Command
+      - Instructions to transform the message sent by the device to a simple 
+        key-value JSON structure.
+		
 How to build
 ============
 
