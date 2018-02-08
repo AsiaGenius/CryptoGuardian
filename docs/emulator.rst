@@ -5,14 +5,15 @@ Diff CryptoGuardian
 rAthena
 ====
 
-``Open src\common\showmsg.h``
+Open ``src\common\showmsg.h``
 
-``after:`` 
+after: 
+
 .. code-block:: bash
 
     extern char timestamp_format[20];
 
-``Replace:``
+Replace:
 
 .. code-block:: bash
 
@@ -28,7 +29,7 @@ rAthena
     MSG_FATALERROR
     };
 
-``to: ``
+to:
 
 .. code-block:: bash
     
@@ -46,12 +47,14 @@ rAthena
     };
 
 
-``replace:``
+replace:
+
 .. code-block:: bash
 
 extern void ClearScreen(void);
 
-``to:``
+to:
+
 .. code-block:: bash
 
     //RingSec by Gary
@@ -60,9 +63,10 @@ extern void ClearScreen(void);
     extern void ClearScreen(void);
 
 
-``Open src\common\showmsg.c``
+Open ``src\common\showmsg.c``
 
-``After:``
+After:
+
 .. code-block:: bash
 
     void ShowStatus(const char *string, ...) {
@@ -72,7 +76,8 @@ extern void ClearScreen(void);
     va_end(ap);
     }
 
-``Add:``
+Add:
+
 .. code-block:: bash
 
     //RingSec by Gary
@@ -86,7 +91,8 @@ extern void ClearScreen(void);
 
 
 
-``After:``
+After:
+
 .. code-block:: bash
 
     case MSG_STATUS: //Bright Green (To inform about good things)
@@ -94,7 +100,8 @@ extern void ClearScreen(void);
 	break;
 			
 			
-``add this:``
+add this:
+
 .. code-block:: bash
 
     //RingSec by Gary
@@ -104,14 +111,16 @@ extern void ClearScreen(void);
 	//RingSec by Gary
 
 			
-``Open src\char\char_clif.hpp``		
+Open ``src\char\char_clif.hpp``		
 
-``after:``
+after:
+
 .. code-block:: bash
 
 void chclif_block_character( int fd, struct char_session_data* sd);
 
-``add this:``
+add this:
+
 .. code-block:: bash
 
     //RingSec by Gary
@@ -119,9 +128,10 @@ void chclif_block_character( int fd, struct char_session_data* sd);
     //RingSec by Gary	
 	
 
-``Open src\char\char_clif.cpp``
+Open ``src\char\char_clif.cpp``
 
-``Afeter:``
+Afeter:
+
 .. code-block:: bash
 
     uint32 account_id = RFIFOL(fd,2);
@@ -130,32 +140,34 @@ void chclif_block_character( int fd, struct char_session_data* sd);
 	int sex = RFIFOB(fd,16);
 	RFIFOSKIP(fd,17);
 		
-``add this:``
+add this:
+
 .. code-block:: bash
     //RingSec by Gary
 	if (atoi(Crypto_Check_Flag(account_id)) > 0)
 	return 1;
 	//RingSec by Gary
 		
-===================================
-add this in the end of the file
-===================================
-//RingSec by Gary
-char* Crypto_Check_Flag(int account_id)
-{
-	char* data;
-	if (SQL_SUCCESS != Sql_Query(sql_handle, "SELECT `flag` FROM `login` WHERE `account_id` = '%d'", account_id))
-	{
-		Sql_ShowDebug(sql_handle);
-	}
-	else if (SQL_SUCCESS == Sql_NextRow(sql_handle))
-	{
-		Sql_GetData(sql_handle, 0, &data, NULL);
-	}
+``add this in the end of the file``
 
-	return data;
-}
-//RingSec by Gary
+.. code-block:: bash
+
+    //RingSec by Gary
+    char* Crypto_Check_Flag(int account_id)
+    {
+        char* data;
+        if (SQL_SUCCESS != Sql_Query(sql_handle, "SELECT `flag` FROM `login` WHERE `account_id` = '%d'", account_id))
+        {
+            Sql_ShowDebug(sql_handle);
+        }
+        else if (SQL_SUCCESS == Sql_NextRow(sql_handle))
+        {
+            Sql_GetData(sql_handle, 0, &data, NULL);
+        }
+
+        return data;
+    }
+    //RingSec by Gary
 
 =================================
 open src\login\loginclif.cpp
