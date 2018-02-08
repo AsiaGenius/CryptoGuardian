@@ -2,16 +2,16 @@
 Install CryptoGuardian 
 ========
 
-Step #2 Folder Structure
+Install CryptoGuardian - Step #2 Folder Structure
 ====
 
 2.1 - The Folder Structure is;
 
 .. code-block:: bash
-YouROfolder/GameGuard
-YouROfolder/GameGuard/ring.dll
-YouROfolder/GameGuard/Splash.bmp
-YouROfolder/GameGuard/cg.ini
+    YourROfolder/GameGuard
+    YourROfolder/GameGuard/ring.dll
+    YourROfolder/GameGuard/Splash.bmp
+    YourROfolder/GameGuard/cg.ini
             
 
 2.2 - Copy GameGuard folder to your RO folder; ``https://github.com/AsiaGenius/CryptoGuardian/shield/GameGuard``
@@ -40,9 +40,12 @@ Yes, you need the add-on called metamask.
 This add-on will help us validate day-to-day purchase transactions. 
 Do not worry Metamask is famous and used by thousands of users.
 
+|step8|
+
+
 Install Metamask and create your secure password: https://www.youtube.com/watch?v=Vj9ztSdKSPU
 
-``Once installed and logged in, you can check your status on the network, you are synced! You will need balance to activate your protection.``
+``Alert!`` Once installed and logged in, you can check your status on the network, you are synced! You will need balance to activate your protection.
 
 How to buy ethereum? There are several websites. Or you can request support at Discord.
 
@@ -52,13 +55,13 @@ How to buy ethereum? There are several websites. Or you can request support at D
 
 |step6|
 
-``Note: When you confirm, you will open a payment screen based on Metamask. Confirm payment that should be between $ 2- $ 4. After confirmed, wait a few minutes (10 - 20 minutes) for your newest server to appear!``
+``Note:`` When you confirm, you will open a payment screen based on Metamask. Confirm payment that should be between $ 2- $ 4. After confirmed, wait a few minutes (10 - 20 minutes) for your newest server to appear!
 
 Press F5 to reload dashboard and wait your server!
 
 |step7|
 
-``Done! Your server is up and running. Save the Server Address, it will be important. Your server is now running on node, it will never be destroyed, even if the CryptoGuardian services go offline you will not be affected.``
+Done! Your server is up and running. Save the Server Address, it will be important. Your server is now running on node, it will never be destroyed, even if the CryptoGuardian services go offline you will not be affected.
 
 
 
@@ -75,4 +78,6 @@ Press F5 to reload dashboard and wait your server!
 .. |step6| image:: https://image.prntscr.com/image/isx_r9SfSD_HHD3wLnC_PA.png
    :target: http://docs.cryptoguardian.net/en/latest/index.html#how-to-get-support
 .. |step7| image:: https://image.prntscr.com/image/-EpQwZWQQWCa65mG3OrLcA.png
+   :target: http://docs.cryptoguardian.net/en/latest/index.html#how-to-get-support
+.. |step8| image:: https://image.prntscr.com/image/-9YR02f9Rx6L48WYQPwglQ.png
    :target: http://docs.cryptoguardian.net/en/latest/index.html#how-to-get-support
