@@ -11,6 +11,22 @@ rAthena
 ``Replace:``
 
 .. code-block:: bash
+
+    enum msg_type {
+    MSG_NONE,
+    MSG_STATUS,
+    MSG_SQL,
+    MSG_INFORMATION,
+    MSG_NOTICE,
+    MSG_WARNING,
+    MSG_DEBUG,
+    MSG_ERROR,
+    MSG_FATALERROR
+    };
+
+``to:``
+
+.. code-block:: bash
     enum msg_type {
         MSG_NONE,
         MSG_STATUS,
@@ -20,22 +36,9 @@ rAthena
         MSG_WARNING,
         MSG_DEBUG,
         MSG_ERROR,
-        MSG_FATALERROR
+        MSG_FATALERROR,
+        MSG_CryptoGuard
     };
-
-``to:``
-enum msg_type {
-	MSG_NONE,
-	MSG_STATUS,
-	MSG_SQL,
-	MSG_INFORMATION,
-	MSG_NOTICE,
-	MSG_WARNING,
-	MSG_DEBUG,
-	MSG_ERROR,
-	MSG_FATALERROR,
-	MSG_CryptoGuard
-};
 
 
 ``replace:``
