@@ -5,6 +5,9 @@ Diff CryptoGuardian
 rAthena
 ====
 
+Source DIFF
+-------------
+
 Open ``src\common\showmsg.h``
 
 after: 
@@ -143,6 +146,7 @@ After:
 add this:
 
 .. code-block:: bash
+
     //RingSec by Gary
 	if (atoi(Crypto_Check_Flag(account_id)) > 0)
 	    return 1;
@@ -171,6 +175,8 @@ add this in the end of the file
 
 
 open ``src\login\loginclif.cpp``
+
+After This:
 
 .. code-block:: bash
 
@@ -247,7 +253,7 @@ After this:
 
 .. code-block:: bash
 
-void ipban_final(void);
+    void ipban_final(void);
 
 add this:
 
@@ -618,8 +624,8 @@ after this:
 .. code-block:: bash
 
     RecvFunc func_recv;
-	SendFunc func_send;
-	ParseFunc func_parse;
+    SendFunc func_send;
+    ParseFunc func_parse;
 
 	void* session_data; // stores application-specific data related to the session
 	
