@@ -20,6 +20,8 @@ To buy days, you will need Ethereum (ETH). You can buy as many days as you need.
 
 |step3|
 
+Done! Your transaction will be processed in 10 minutes. Press F5 to update dashboard.
+
 .. |step1| image:: https://image.prntscr.com/image/qVzuKfGXRoaBaE2xqCCh8A.png
    :target: http://docs.cryptoguardian.net/en/latest/index.html#how-to-get-support
 .. |step2| image:: https://image.prntscr.com/image/GgSJlfmNTiiyoXJ5wwbXdQ.png
