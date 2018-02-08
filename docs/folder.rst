@@ -56,7 +56,7 @@ How to buy ethereum? There are several websites. Or you can request support at D
 
 Press F5 to reload dashboard and wait your server!
 
-|step6|
+|step7|
 
 ``Done! Your server is up and running. Save the Server Address, it will be important. Your server is now running on node, it will never be destroyed, even if the CryptoGuardian services go offline you will not be affected.``
 
