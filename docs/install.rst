@@ -1,20 +1,13 @@
 ========
-Client Install CryptoGuardian 
+Install CryptoGuardian 
 ========
 
-Step #1 Hexed DIFF
+Step #1 Hexed
 ====
 
-Coming soon
+Primeiramente, deverá anexar a ring.dll em seu hexed. Vá até o github e na pasta Tools, abra o LordPE.
 
-Step #2 Folder Structure
-=====
+{imagem da pasta Tools}
 
-Coming soon
+Em seguida, clique em Open e escolha o seu hexed.
 
-.. _Apache Foundation: https://kafka.apache.org
-
-Step #3 Generate Hash
-=====
-
-Coming soon

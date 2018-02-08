@@ -83,16 +83,19 @@ To use the CryptoGuardian services you must have ETH to perform the transactions
 To buy ETH follow the links described in the glossary or find some reliable seller.
 CryptoGuardian does not have monthly payment, we sell only the day, the user can buy as many days as he needs.
 
+|Docker badge|
+
 How to get Support?
 ============
 You can get support by contacting someone with the ``DevTeam`` tag in the discord. This is the fastest way to get real-time support.
+
 |License badge|
 
 
 .. |License badge| image:: https://image.prntscr.com/image/vEgaE2KVQ-ukwkMpEIbQUw.png
-   :target: https://opensource.org/licenses/GPL-3.0
-.. |Docker badge| image:: https://img.shields.io/docker/pulls/dojot/iotagent-json.svg
-   :target: https://hub.docker.com/r/dojot/iotagent-json/
+   :target: http://docs.cryptoguardian.net/en/latest/index.html#how-to-get-support
+.. |Docker badge| image:: https://image.prntscr.com/image/OGbL2IxeR_2EOCAl8HrLIQ.png
+   :target: http://docs.cryptoguardian.net/en/latest/index.html#how-it-works
 .. |Travis badge| image:: https://travis-ci.org/dojot/iotagent-json.svg?branch=cpqd_master
    :target: https://travis-ci.org/dojot/iotagent-json#
 
