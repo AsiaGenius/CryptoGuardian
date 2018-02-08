@@ -24,7 +24,7 @@ rAthena
     MSG_FATALERROR
     };
 
-``to:``
+``to: ``
 
 .. code-block:: bash
     enum msg_type {
