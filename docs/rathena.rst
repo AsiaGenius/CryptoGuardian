@@ -2,7 +2,7 @@
 Diff CryptoGuardian
 ========
 
-rAthena
+rAthena Install
 ====
 
 Source DIFF
@@ -641,7 +641,7 @@ add this:
 	
 
 
-MYSQL QUERY
+Mysql Query
 -------------
 
 .. code-block:: bash
@@ -663,25 +663,6 @@ MYSQL QUERY
     ENGINE=MyISAM
     ;
 
-==================
-==================
 
-brAthena
-=====
-Coming soon
-
-Cronus
-=====
-Coming soon
-
-
-eAmod
-=====
-Coming soon
-
-
-rAmod
-=====
-Coming soon
 
 .. _Apache Foundation: https://kafka.apache.org

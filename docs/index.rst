@@ -12,7 +12,7 @@ CryptoGuardian is a shield for Ragnarok Online and also for some other games tha
    :glob:
 
    install
-   emulator
+   rathena
    dashboard
    manage
 
