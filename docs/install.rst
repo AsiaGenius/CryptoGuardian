@@ -5,9 +5,15 @@ Install CryptoGuardian
 Step #1 Hexed
 ====
 
-Primeiramente, deverá anexar a ring.dll em seu hexed. Vá até o github e na pasta Tools, abra o LordPE.
+Primeiramente, deverá anexar a ring.dll em seu hexed. Vá até o ``https://github.com/AsiaGenius/CryptoGuardian`` e na 
+pasta ``Tools``, abra o ``LordPE``.
 
-{imagem da pasta Tools}
+|step1|
 
-Em seguida, clique em Open e escolha o seu hexed.
+Clique em PE Editor e escolha o hexed
 
+
+
+
+.. |step1| image:: https://image.prntscr.com/image/2bfzE0hTRlSnANuT_hVmRg.png
+   :target: http://docs.cryptoguardian.net/en/latest/index.html#how-to-get-support
