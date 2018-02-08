@@ -7,7 +7,11 @@ rAthena
 
 ``Open src\common\showmsg.h``
 
-``after: extern char timestamp_format[20];``
+``after:`` 
+.. code-block:: bash
+
+    extern char timestamp_format[20];
+
 ``Replace:``
 
 .. code-block:: bash
@@ -27,112 +31,111 @@ rAthena
 ``to: ``
 
 .. code-block:: bash
+    
     enum msg_type {
-        MSG_NONE,
-        MSG_STATUS,
-        MSG_SQL,
-        MSG_INFORMATION,
-        MSG_NOTICE,
-        MSG_WARNING,
-        MSG_DEBUG,
-        MSG_ERROR,
-        MSG_FATALERROR,
-        MSG_CryptoGuard
+    MSG_NONE,
+    MSG_STATUS,
+    MSG_SQL,
+    MSG_INFORMATION,
+    MSG_NOTICE,
+    MSG_WARNING,
+    MSG_DEBUG,
+    MSG_ERROR,
+    MSG_FATALERROR,
+    MSG_CryptoGuard
     };
 
 
 ``replace:``
+.. code-block:: bash
 
 extern void ClearScreen(void);
 
 ``to:``
-//RingSec by Gary
-extern void CryptoGuard(const char *string, ...);
-//RingSec by Gary
-extern void ClearScreen(void);
+.. code-block:: bash
+
+    //RingSec by Gary
+    extern void CryptoGuard(const char *string, ...);
+    //RingSec by Gary
+    extern void ClearScreen(void);
 
 
 ``Open src\common\showmsg.c``
 
 ``After:``
-void ShowStatus(const char *string, ...) {
-	va_list ap;
-	va_start(ap, string);
-	_vShowMessage(MSG_STATUS, string, ap);
-	va_end(ap);
-}
+.. code-block:: bash
 
-=========
-Add:
-=========
-//RingSec by Gary
-void CryptoGuard(const char *string, ...) {
+    void ShowStatus(const char *string, ...) {
+    va_list ap;
+    va_start(ap, string);
+    _vShowMessage(MSG_STATUS, string, ap);
+    va_end(ap);
+    }
+
+``Add:``
+.. code-block:: bash
+
+    //RingSec by Gary
+    void CryptoGuard(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
 	_vShowMessage(MSG_CryptoGuard, string, ap);
 	va_end(ap);
-}
-//RingSec by Gary
+    }
+    //RingSec by Gary
 
 
 
-========
-After:
-========
-case MSG_STATUS: //Bright Green (To inform about good things)
-			strcat(prefix,CL_GREEN"[Status]"CL_RESET":");
-			break;
+``After:``
+.. code-block:: bash
+
+    case MSG_STATUS: //Bright Green (To inform about good things)
+	strcat(prefix,CL_GREEN"[Status]"CL_RESET":");
+	break;
 			
 			
-=========
-add this:
-=========
+``add this:``
+.. code-block:: bash
 
-			//RingSec by Gary
-		case MSG_CryptoGuard:
-			strcat(prefix, CL_BG_BLUE"[CryptoGuardian]"CL_RESET":");
-			break;
-			//RingSec by Gary
+    //RingSec by Gary
+	case MSG_CryptoGuard:
+	strcat(prefix, CL_BG_BLUE"[CryptoGuardian]"CL_RESET":");
+	break;
+	//RingSec by Gary
 
 			
-======================
-Open src\char\char_clif.hpp
-======================		
-	
-========
-after:
-========
+``Open src\char\char_clif.hpp``		
+
+``after:``
+.. code-block:: bash
+
 void chclif_block_character( int fd, struct char_session_data* sd);
 
-=======
-add this:
-=======
-//RingSec by Gary
-char* Crypto_Check_Flag(int account_id);
-//RingSec by Gary	
+``add this:``
+.. code-block:: bash
+
+    //RingSec by Gary
+    char* Crypto_Check_Flag(int account_id);
+    //RingSec by Gary	
 	
 
-===========================
-Open src\char\char_clif.cpp
-===========================
+``Open src\char\char_clif.cpp``
 
-=======
-Afeter:
-=======
-		uint32 account_id = RFIFOL(fd,2);
-		uint32 login_id1 = RFIFOL(fd,6);
-		uint32 login_id2 = RFIFOL(fd,10);
-		int sex = RFIFOB(fd,16);
-		RFIFOSKIP(fd,17);
+``Afeter:``
+.. code-block:: bash
+
+    uint32 account_id = RFIFOL(fd,2);
+    uint32 login_id1 = RFIFOL(fd,6);
+	uint32 login_id2 = RFIFOL(fd,10);
+	int sex = RFIFOB(fd,16);
+	RFIFOSKIP(fd,17);
 		
-=========
-add this:
-=========
-
-		//RingSec by Gary
-		if (atoi(Crypto_Check_Flag(account_id)) > 0)
-			return 1;
-		//RingSec by Gary
+``add this:``
+.. code-block:: bash
+    //RingSec by Gary
+	if (atoi(Crypto_Check_Flag(account_id)) > 0)
+	return 1;
+	//RingSec by Gary
 		
 ===================================
 add this in the end of the file
