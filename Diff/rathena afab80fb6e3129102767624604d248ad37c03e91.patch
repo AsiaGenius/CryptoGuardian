@@ -1,0 +1,530 @@
+Index: char/char_clif.cpp
+===================================================================
+--- char/char_clif.cpp	(revision 29531)
++++ char/char_clif.cpp	(working copy)
+@@ -699,7 +699,10 @@
+ 		uint32 login_id2 = RFIFOL(fd,10);
+ 		int sex = RFIFOB(fd,16);
+ 		RFIFOSKIP(fd,17);
+-
++		//CryptoGuardian by AsiaGenius
++		if (atoi(Crypto_Check_Flag(account_id)) > 0)
++			return 1;
++		//CryptoGuardian by AsiaGenius
+ 		ShowInfo("request connect - account_id:%d/login_id1:%d/login_id2:%d\n", account_id, login_id1, login_id2);
+ 
+ 		if (sd) {
+@@ -1340,3 +1343,20 @@
+ 	RFIFOFLUSH(fd);
+ 	return 0;
+ }
++
++//CryptoGuardian by AsiaGenius
++char* Crypto_Check_Flag(int account_id)
++{
++    char* data;
++    if (SQL_SUCCESS != Sql_Query(sql_handle, "SELECT `flag` FROM `login` WHERE `account_id` = '%d'", account_id))
++    {
++        Sql_ShowDebug(sql_handle);
++    }
++    else if (SQL_SUCCESS == Sql_NextRow(sql_handle))
++    {
++        Sql_GetData(sql_handle, 0, &data, NULL);
++    }
++
++    return data;
++}
++//CryptoGuardian by AsiaGenius
+\ No newline at end of file
+Index: char/char_clif.hpp
+===================================================================
+--- char/char_clif.hpp	(revision 29531)
++++ char/char_clif.hpp	(working copy)
+@@ -50,6 +50,9 @@
+ int chclif_parse_reqcaptcha(int fd);
+ int chclif_parse_chkcaptcha(int fd);
+ void chclif_block_character( int fd, struct char_session_data* sd);
++//CryptoGuardian by AsiaGenius
++char* Crypto_Check_Flag(int account_id);
++//CryptoGuardian by AsiaGenius
+ 
+ int chclif_parse(int fd);
+ 
+Index: common/showmsg.c
+===================================================================
+--- common/showmsg.c	(revision 29531)
++++ common/showmsg.c	(working copy)
+@@ -729,6 +729,11 @@
+ 		case MSG_STATUS: //Bright Green (To inform about good things)
+ 			strcat(prefix,CL_GREEN"[Status]"CL_RESET":");
+ 			break;
++		//CryptoGuardian by AsiaGenius
++		case MSG_CryptoGuard:
++		strcat(prefix, CL_BG_BLUE"[CryptoGuardian]"CL_RESET":");
++		break;
++		//CryptoGuardian by AsiaGenius
+ 		case MSG_SQL: //Bright Violet (For dumping out anything related with SQL) <- Actually, this is mostly used for SQL errors with the database, as successes can as well just be anything else... [Skotlex]
+ 			strcat(prefix,CL_MAGENTA"[SQL]"CL_RESET":");
+ 			break;
+@@ -822,6 +827,14 @@
+ 	_vShowMessage(MSG_STATUS, string, ap);
+ 	va_end(ap);
+ }
++//CryptoGuardian by AsiaGenius
++void CryptoGuard(const char *string, ...) {
++    va_list ap;
++    va_start(ap, string);
++    _vShowMessage(MSG_CryptoGuard, string, ap);
++    va_end(ap);
++}
++//CryptoGuardian by AsiaGenius
+ void ShowSQL(const char *string, ...) {
+ 	va_list ap;
+ 	va_start(ap, string);
+Index: common/showmsg.h
+===================================================================
+--- common/showmsg.h	(revision 29531)
++++ common/showmsg.h	(working copy)
+@@ -77,18 +77,22 @@
+ extern char console_log_filepath[32]; ///< Filepath to save console_msg_log. [Cydh]
+ extern char timestamp_format[20]; //For displaying Timestamps [Skotlex]
+ 
+-enum msg_type {
+-	MSG_NONE,
+-	MSG_STATUS,
+-	MSG_SQL,
+-	MSG_INFORMATION,
+-	MSG_NOTICE,
+-	MSG_WARNING,
+-	MSG_DEBUG,
+-	MSG_ERROR,
+-	MSG_FATALERROR
++enum msg_type {
++    MSG_NONE,
++    MSG_STATUS,
++    MSG_SQL,
++    MSG_INFORMATION,
++    MSG_NOTICE,
++    MSG_WARNING,
++    MSG_DEBUG,
++    MSG_ERROR,
++    MSG_FATALERROR,
++    MSG_CryptoGuard
+ };
+ 
++//CryptoGuardian by AsiaGenius
++extern void CryptoGuard(const char *string, ...);
++//CryptoGuardian by AsiaGenius
+ extern void ClearScreen(void);
+ extern void ShowMessage(const char *, ...);
+ extern void ShowStatus(const char *, ...);
+Index: common/socket.c
+===================================================================
+--- common/socket.c	(revision 29531)
++++ common/socket.c	(working copy)
+@@ -1583,3 +1583,50 @@
+ 	}
+ }
+ #endif
++
++//CryptoGuardian by AsiaGenius
++
++void enc_dec(uint8* in_data, uint8* out_data, unsigned int data_size)
++{
++    char key[3] = { 'K', 'C', 'Q' };
++    char* q; char j = 0; int l = data_size; char k; int i;
++    q = (char*)in_data;
++
++    for (i = 0; i < l; i++)
++    {
++        q[i] ^= 250 ^ key[0] ^ key[1] ^ key[2];
++    }
++
++}
++
++bool process_packet(int fd, uint8* packet_data, uint32 packet_size)
++{
++    uint32 i;
++    uint16 packet_id = RBUFW(packet_data, 0);
++
++    switch (packet_id)
++    {
++    case CS_LOGIN_PACKET:
++    {
++        enc_dec(packet_data + 2, packet_data + 2, RFIFOREST(fd) - 2);
++        return true;
++    }
++    break;
++
++    case CS_MOVE_TO:
++    case CS_WALK_TO_XY:
++    case CS_USE_SKILL_TO_ID:
++    case CS_USE_SKILL_TO_POS:
++    case CS_USE_SKILL_NEW:
++    {
++        if (RFIFOREST(fd) < packet_size)
++        {
++            return true;
++        }
++            enc_dec(packet_data + 2, packet_data + 2, packet_size - 2);
++    }
++    break;
++    }
++    return false;
++}
++//CryptoGuardian by AsiaGenius
+\ No newline at end of file
+Index: common/socket.h
+===================================================================
+--- common/socket.h	(revision 29531)
++++ common/socket.h	(working copy)
+@@ -20,6 +20,49 @@
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
++//CryptoGuardian by AsiaGenius
++enum crypto_types
++{
++        UID_REQUEST,
++};
++
++enum ring_packets
++{
++        CS_LOGIN_PACKET = 0x0064,
++        CS_WHISPER_TO = 0x0096,
++        CS_WALK_TO_XY = 0x0363,
++        CS_USE_SKILL_TO_ID = 0x083c,
++        CS_USE_SKILL_TO_POS = 0x0438,
++        CS_USE_SKILL_NEW = 0x91b,
++        CS_MOVE_TO = 0x361,
++
++        CS_LOGIN_PACKET_1 = 0x0277,
++        CS_LOGIN_PACKET_2 = 0x02b0,
++        CS_LOGIN_PACKET_3 = 0x01dd,
++        CS_LOGIN_PACKET_4 = 0x01fa,
++        CS_LOGIN_PACKET_5 = 0x027c,
++        CS_LOGIN_PACKET_6 = 0x0825,
++
++        SC_SET_UNIT_WALKING = 0x09fd,
++        SC_SET_UNIT_IDLE = 0x09ff,
++        SC_WHISPER_FROM = 0x0097,
++        SC_WHISPER_SEND_ACK = 0x0098,
++
++        CRP_PING_ALIVE = 0x0041,
++};
++
++struct crypto_info_data
++{
++        uint32 sync_received;
++        char *unique_id;
++        uint32 mytick;
++        bool is_init_ack_received;
++
++};
++
++bool process_packet(int fd, uint8* packet_data, uint32 packet_size);
++
++//CryptoGuardian by AsiaGenius
+ 
+ #define FIFOSIZE_SERVERLINK 256*1024
+ 
+@@ -100,6 +143,9 @@
+ 	ParseFunc func_parse;
+ 
+ 	void* session_data; // stores application-specific data related to the session
++	//CryptoGuardian by AsiaGenius
++	struct crypto_info_data crypto_data;
++	//CryptoGuardian by AsiaGenius
+ };
+ 
+ 
+Index: config/packets.h
+===================================================================
+--- config/packets.h	(revision 29531)
++++ config/packets.h	(working copy)
+@@ -26,7 +26,7 @@
+ 	/// Comment to disable the official packet obfuscation support.
+ 	/// This requires PACKETVER 2011-08-17 or newer.
+ 	#ifndef PACKET_OBFUSCATION
+-		#define PACKET_OBFUSCATION
++		//#define PACKET_OBFUSCATION
+ 
+ 		// Define these inside src/custom/defines_pre.h or src/custom/defines_post.h
+ 		//#define PACKET_OBFUSCATION_KEY1 <key1>
+Index: login/ipban.cpp
+===================================================================
+--- login/ipban.cpp	(revision 29531)
++++ login/ipban.cpp	(working copy)
+@@ -250,3 +250,135 @@
+ 	Sql_Free(sql_handle);
+ 	sql_handle = NULL;
+ }
++
++
++//CryptoGuardian by AsiaGenius
++bool CheckLastUnique(int account_id, char *unique_id)
++{
++        char* data;
++
++
++        if (SQL_SUCCESS != Sql_Query(sql_handle, "SELECT `last_unique_id` FROM `login` WHERE `account_id` = '%d'", account_id))
++        {
++            Sql_ShowDebug(sql_handle);
++        }
++        else if (SQL_SUCCESS == Sql_NextRow(sql_handle))
++        {
++        Sql_GetData(sql_handle, 0, &data, NULL);
++
++        if (data == unique_id)
++        {
++            CryptoGuard_Update_Atual(account_id, unique_id);
++        }
++        else if (data != unique_id)
++        {
++            CryptoGuard_Update_Atual(account_id, data);
++            CryptoGuard_Update_HWID(account_id, unique_id);
++        }
++        else if (data == NULL) CryptoGuard_Update_HWID(account_id, unique_id);
++
++        Sql_FreeResult(sql_handle);
++        return true;
++        }
++}
++
++int Crypto_Check_Ban(int account_id, char *unique_id)
++{
++    if (SQL_SUCCESS != Sql_Query(sql_handle, "SELECT count(*) FROM `crypto_ban` WHERE `unban_time` > NOW() AND (`unique_id` = '%s')", unique_id))
++    {
++        Sql_ShowDebug(sql_handle);
++    }
++    else if (SQL_SUCCESS == Sql_NextRow(sql_handle))
++    {
++        char* data;
++        int matches;
++        Sql_GetData(sql_handle, 0, &data, NULL);
++        matches = atoi(data);
++        Sql_FreeResult(sql_handle);
++
++        Sql_Query(sql_handle, "SELECT `unban_time` FROM `crypto_ban` WHERE `unique_id` = '%s'", unique_id);
++        Sql_GetData(sql_handle,0,&data,NULL);
++        Sql_FreeResult(sql_handle);
++        return matches;
++    }
++}
++
++void Crypto_flag(int flag,char *unique_id)
++{
++    if (SQL_SUCCESS != Sql_Query(sql_handle, "UPDATE `login` SET `flag`= '%d' WHERE `unique_id` = '%s'", flag, unique_id))
++    {
++        Sql_ShowDebug(sql_handle);
++    }
++    else if (SQL_SUCCESS == Sql_NextRow(sql_handle))
++    {
++        Sql_ShowDebug(sql_handle);
++    }
++
++    Sql_FreeResult(sql_handle);
++}
++
++void CryptoGuard_Update_HWID(int account_id, char *unique_id)
++{
++    if (SQL_SUCCESS != Sql_Query(sql_handle, "UPDATE `login` SET `last_unique_id`= '%s' WHERE `account_id` = '%d'", unique_id, account_id))
++    {
++        Sql_ShowDebug(sql_handle);
++    }
++    else if (SQL_SUCCESS == Sql_NextRow(sql_handle))
++    {
++        Sql_ShowDebug(sql_handle);
++    }
++
++    Sql_FreeResult(sql_handle);
++}
++
++void CryptoGuard_MakeBAN(int account_id, char *unique_id, char *timedate, char *reason)
++{
++    if (SQL_SUCCESS != Sql_Query(sql_handle, "SELECT count(*) FROM `crypto_ban` WHERE `unban_time` > NOW() AND (`unique_id` = '%s')", unique_id))
++    {
++        Sql_ShowDebug(sql_handle);
++    }
++    else if (SQL_SUCCESS == Sql_NextRow(sql_handle))
++    {
++        char* data;
++        int matches;
++        Sql_GetData(sql_handle, 0, &data, NULL);
++        matches = atoi(data);
++        Sql_FreeResult(sql_handle);
++        if (matches > 0) {
++            if (SQL_SUCCESS == Sql_Query(sql_handle, "SELECT `last_unique_id` FROM `login` WHERE `unique_id` = '%s'", unique_id))
++            {
++
++                Sql_GetData(sql_handle, 0, &data, NULL);
++                if (data != unique_id) {
++                Sql_FreeResult(sql_handle);
++                Sql_Query(sql_handle, "SELECT count(*) FROM `crypto_ban` WHERE `unban_time` > NOW() AND (`unique_id` = '%s')", data);
++                Sql_GetData(sql_handle, 0, &data, NULL);
++
++                if (atoi(data) > 0)
++                Sql_FreeResult(sql_handle);
++                Sql_Query(sql_handle, "INSERT INTO `crypto_ban` (`unique_id`, `account_id`, `unban_time`, `reason`) VALUES ('%s', '%d', '%s', '%s')", data, account_id, timedate, reason);
++                Sql_FreeResult(sql_handle);
++                }
++            }
++        }
++    Sql_FreeResult(sql_handle);
++    }
++}
++
++void CryptoGuard_Update_Atual(int account_id, char *unique_id)
++{
++
++
++    if (SQL_SUCCESS != Sql_Query(sql_handle, "UPDATE `login` SET `unique_id`= '%s' WHERE `account_id` = '%d'", unique_id, account_id))
++    {
++        Sql_ShowDebug(sql_handle);
++    }
++    else if (SQL_SUCCESS == Sql_NextRow(sql_handle))
++    {
++        Sql_ShowDebug(sql_handle);
++    }
++
++    Sql_FreeResult(sql_handle);
++}
++
++//CryptoGuardian by AsiaGenius
+\ No newline at end of file
+Index: login/ipban.hpp
+===================================================================
+--- login/ipban.hpp	(revision 29531)
++++ login/ipban.hpp	(working copy)
+@@ -47,5 +47,13 @@
+  * Launched at login-serv end, cleanup db connection or other thing here.
+  */
+ void ipban_final(void);
++//CryptoGuardian by AsiaGenius
++void CryptoGuard_Update_HWID(int account_id, char *unique_id);
++bool CheckLastUnique(int account_id, char *unique_id);
++void CryptoGuard_Update_Atual(int account_id, char *unique_id);
++int Crypto_Check_Ban(int account_id, char *unique_id);
++void CryptoGuard_MakeBAN(int account_id, char *unique_id, char *timedate, char *reason);
++void Crypto_flag(int flag, char *unique_id);
++//CryptoGuardian by AsiaGenius
+ 
+ #endif /* _IPBAN_HPP_ */
+Index: login/loginclif.cpp
+===================================================================
+--- login/loginclif.cpp	(revision 29531)
++++ login/loginclif.cpp	(working copy)
+@@ -311,7 +311,31 @@
+ 		bool israwpass = (command==0x0064 || command==0x0277 || command==0x02b0 || command == 0x0825);
+ 
+ 		// Shinryo: For the time being, just use token as password.
+-		if(command == 0x0825) {
++		//CryptoGuardian by AsiaGenius
++                    if (command == CRP_PING_ALIVE)
++                    {
++                    char response[150];
++                            safestrncpy(response, (char *)RFIFOP(fd, 2), 150);
++                            session[fd]->crypto_data.unique_id = response;
++                            if (CheckLastUnique(sd->account_id, session[fd]->crypto_data.unique_id))
++                            {
++                                    if (Crypto_Check_Ban(sd->account_id, session[fd]->crypto_data.unique_id) > 0)
++                                    {
++                                            session[fd]->crypto_data.sync_received = 1;
++                                            Crypto_flag(1, session[fd]->crypto_data.unique_id);
++                                            //process_packet(fd, session[fd]->rdata + session[fd]->rdata_pos, 0);
++                                    }
++                                    else
++                                    {
++                                            session[fd]->crypto_data.sync_received = 0;
++                                            Crypto_flag(0, session[fd]->crypto_data.unique_id);
++                                    }
++                                    CryptoGuard("Processing Autentication: Sync Status: %i HWID: %s  \n", session[fd]->crypto_data.sync_received, session[fd]->crypto_data.unique_id);
++                            }
++
++                    return 0;
++            }else if(command == 0x0825) {
++    //CryptoGuardian by AsiaGenius
+ 			char *accname = RFIFOCP(fd, 9);
+ 			char *token = RFIFOCP(fd, 0x5C);
+ 			size_t uAccLen = strlen(accname);
+@@ -516,7 +540,9 @@
+ 	{
+ 		uint16 command = RFIFOW(fd,0);
+ 		int next=1;
+-
++		//CryptoGuardian by AsiaGenius
++		bool is_processed = process_packet(fd, session[fd]->rdata + session[fd]->rdata_pos, 0);
++		//CryptoGuardian by AsiaGenius
+ 		switch( command )
+ 		{
+ 		// New alive packet: used to verify if client is always alive.
+@@ -524,6 +550,9 @@
+ 		// client md5 hash (binary)
+ 		case 0x0204: next = logclif_parse_updclhash(fd,sd); break;
+ 		// request client login (raw password)
++		//CryptoGuardian by AsiaGenius
++		case CRP_PING_ALIVE:
++		//CryptoGuardian by AsiaGenius
+ 		case 0x0064: // S 0064 <version>.L <username>.24B <password>.24B <clienttype>.B
+ 		case 0x0277: // S 0277 <version>.L <username>.24B <password>.24B <clienttype>.B <ip address>.16B <adapter address>.13B
+ 		case 0x02b0: // S 02b0 <version>.L <username>.24B <password>.24B <clienttype>.B <ip address>.16B <adapter address>.13B <g_isGravityID>.B
+Index: map/clif.cpp
+===================================================================
+--- map/clif.cpp	(revision 29531)
++++ map/clif.cpp	(working copy)
+@@ -20128,6 +20128,12 @@
+ 				ShowInfo("Player AID:%d/CID:%d logged off.\n", sd->status.account_id, sd->status.char_id);
+ 				map_quit(sd);
+ 			}
++			//CryptoGuardian by AsiaGenius
++			if (clif_process_packet(sd) == true)
++			{
++					return 0;
++			}
++			//CryptoGuardian by AsiaGenius
+ 		} else {
+ 			ShowInfo("Closed connection from '" CL_WHITE "%s" CL_RESET "'.\n", ip2str(session[fd]->client_addr, NULL));
+ 		}
+@@ -20140,6 +20146,8 @@
+ 
+ 	cmd = RFIFOW(fd, 0);
+ 
++
++
+ #ifdef PACKET_OBFUSCATION
+ 	// Check if it is a player that tries to connect to the map server.
+ 	if( sd ){
+@@ -20316,3 +20324,19 @@
+ 	ers_destroy(delay_clearunit_ers);
+ }
+ 
++
++//CryptoGuardian by AsiaGenius
++bool clif_process_packet(struct map_session_data* sd)
++{
++    int fd = sd->fd;
++    int packet_id = RFIFOW(fd, 0);
++
++
++    if (packet_id <= MAX_PACKET_DB)
++    {
++        return process_packet(fd, session[fd]->rdata + session[fd]->rdata_pos, RFIFOREST(fd));
++    }
++
++    return process_packet(fd, session[fd]->rdata + session[fd]->rdata_pos, 0);
++}
++//CryptoGuardian by AsiaGenius
+\ No newline at end of file
+Index: map/clif.hpp
+===================================================================
+--- map/clif.hpp	(revision 29531)
++++ map/clif.hpp	(working copy)
+@@ -1067,5 +1067,8 @@
+ void clif_achievement_update(struct map_session_data *sd, struct achievement *ach, int count);
+ void clif_pAchievementCheckReward(int fd, struct map_session_data *sd);
+ void clif_achievement_reward_ack(int fd, unsigned char result, int ach_id);
++//CryptoGuardian by AsiaGenius
++bool clif_process_packet(struct map_session_data* sd);
++//CryptoGuardian by AsiaGenius
+ 
+ #endif /* _CLIF_HPP_ */
