@@ -18,7 +18,7 @@ after:
 
 Replace:
 
-.. code-block:: bash
+OT
 
     enum msg_type {
         MSG_NONE,
@@ -60,9 +60,9 @@ to:
 
 .. code-block:: bash
 
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
     extern void CryptoGuard(const char *string, ...);
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
     extern void ClearScreen(void);
 
 
@@ -83,14 +83,14 @@ Add:
 
 .. code-block:: bash
 
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
     void CryptoGuard(const char *string, ...) {
         va_list ap;
         va_start(ap, string);
         _vShowMessage(MSG_CryptoGuard, string, ap);
         va_end(ap);
     }
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
 
 
 
@@ -107,11 +107,11 @@ add this:
 
 .. code-block:: bash
 
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
 	case MSG_CryptoGuard:
         strcat(prefix, CL_BG_BLUE"[CryptoGuardian]"CL_RESET":");
         break;
-	//RingSec by Gary
+	//CryptoGuardian by AsiaGenius
 
 			
 Open ``src\char\char_clif.hpp``		
@@ -126,9 +126,9 @@ add this:
 
 .. code-block:: bash
 
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
     char* Crypto_Check_Flag(int account_id);
-    //RingSec by Gary	
+    //CryptoGuardian by AsiaGenius	
 	
 
 Open ``src\char\char_clif.cpp``
@@ -147,16 +147,16 @@ add this:
 
 .. code-block:: bash
 
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
 	if (atoi(Crypto_Check_Flag(account_id)) > 0)
 	    return 1;
-	//RingSec by Gary
+	//CryptoGuardian by AsiaGenius
 		
 add this in the end of the file
 
 .. code-block:: bash
 
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
     char* Crypto_Check_Flag(int account_id)
     {
         char* data;
@@ -171,7 +171,7 @@ add this in the end of the file
 
         return data;
     }
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
 
 
 open ``src\login\loginclif.cpp``
@@ -189,9 +189,9 @@ Add this:
 
 .. code-block:: bash
 
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
 	bool is_processed = process_packet(fd, session[fd]->rdata + session[fd]->rdata_pos, 0);
-	//RingSec by Gary
+	//CryptoGuardian by AsiaGenius
 		
 After:
 
@@ -205,9 +205,9 @@ Add this:
 
 .. code-block:: bash
 
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
 	case CRP_PING_ALIVE:
-	//RingSec by Gary
+	//CryptoGuardian by AsiaGenius
 
 replace this:
 
@@ -219,7 +219,7 @@ for this:
 
 .. code-block:: bash
 
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
 			if (command == CRP_PING_ALIVE)
 			{
 	    		char response[150];
@@ -243,7 +243,7 @@ for this:
 			
 			return 0;
 		}else if(command == 0x0825) {
-	//RingSec by Gary
+	//CryptoGuardian by AsiaGenius
 		
 		
 
@@ -259,14 +259,14 @@ add this:
 
 .. code-block:: bash
 
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
     void CryptoGuard_Update_HWID(int account_id, char *unique_id);
     bool CheckLastUnique(int account_id, char *unique_id);
     void CryptoGuard_Update_Atual(int account_id, char *unique_id);
     int Crypto_Check_Ban(int account_id, char *unique_id);
     void CryptoGuard_MakeBAN(int account_id, char *unique_id, char *timedate, char *reason);
     void Crypto_flag(int flag, char *unique_id);
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
 
 
 
@@ -277,7 +277,7 @@ add to end of the file
 
 .. code-block:: bash
 
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
     bool CheckLastUnique(int account_id, char *unique_id)
     {
             char* data;	
@@ -406,7 +406,7 @@ add to end of the file
         Sql_FreeResult(sql_handle);
     }
 
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
 
 
 
@@ -434,12 +434,12 @@ Add this:
 
 .. code-block:: bash
 
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
 	if (clif_process_packet(sd) == true)
 	{
 		return 0;
 	}
-	//RingSec by Gary
+	//CryptoGuardian by AsiaGenius
 	
 	
 
@@ -447,7 +447,7 @@ add the end of the file
 
 .. code-block:: bash
 
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
     bool clif_process_packet(struct map_session_data* sd)
     {
         int fd = sd->fd;
@@ -461,7 +461,7 @@ add the end of the file
 
         return process_packet(fd, session[fd]->rdata + session[fd]->rdata_pos, 0);
     }
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
 
 
 
@@ -479,9 +479,9 @@ add this:
 
 .. code-block:: bash
 
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
     bool clif_process_packet(struct map_session_data* sd);
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
 
 
 open ``src\common\socket.c``
@@ -491,7 +491,7 @@ add in the end of the file:
 
 .. code-block:: bash
 
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
     void CryptoSend(int fd, unsigned short info_type, char* message)
     {
         int message_len = strlen(message) + 1;
@@ -549,7 +549,7 @@ add in the end of the file:
         }
         return false;
     }
-    //RingSec by Gary
+    //CryptoGuardian by AsiaGenius
 
 
 open ``src\common\socket.h``
@@ -572,7 +572,7 @@ add this:
 
 .. code-block:: bash
 
-	//RingSec by Gary
+	//CryptoGuardian by AsiaGenius
 	enum crypto_types
 	{
 		UID_REQUEST,
@@ -614,7 +614,7 @@ add this:
 
 	bool process_packet(int fd, uint8* packet_data, uint32 packet_size);
 	
-	//RingSec by Gary
+	//CryptoGuardian by AsiaGenius
 	
 	
 	
@@ -635,9 +635,9 @@ add this:
 
 .. code-block:: bash
 
-	//RingSec by Gary
+	//CryptoGuardian by AsiaGenius
 	struct crypto_info_data crypto_data;
-	//RingSec by Gary	
+	//CryptoGuardian by AsiaGenius	
 	
 
 
