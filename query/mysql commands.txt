@@ -1,0 +1,16 @@
+ALTER TABLE `login`
+	ADD COLUMN `last_unique_id` VARCHAR(255) NOT NULL DEFAULT '' AFTER `last_token`,
+	ADD COLUMN `unique_id` VARCHAR(255) NOT NULL DEFAULT '' AFTER `last_unique_id`,
+	ADD COLUMN `flag` VARCHAR(255) NOT NULL DEFAULT '' AFTER `unique_id`;
+
+
+CREATE TABLE `crypto_ban` (
+	`unique_id` VARCHAR(50) NOT NULL DEFAULT '0',
+	`account_id` INT(11) NOT NULL,
+	`unban_time` DATETIME NOT NULL,
+	`reason` VARCHAR(50) NOT NULL,
+	UNIQUE INDEX `unique_id` (`unique_id`)
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=MyISAM
+;
