@@ -1,5 +1,5 @@
 ALTER TABLE `login`
-	ADD COLUMN `last_unique_id` VARCHAR(255) NOT NULL DEFAULT '' AFTER `last_token`,
+	ADD COLUMN `last_unique_id` VARCHAR(255) NOT NULL DEFAULT '',
 	ADD COLUMN `unique_id` VARCHAR(255) NOT NULL DEFAULT '' AFTER `last_unique_id`,
 	ADD COLUMN `flag` VARCHAR(255) NOT NULL DEFAULT '' AFTER `unique_id`;
 
