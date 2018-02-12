@@ -1,0 +1,553 @@
+Index: char/char.c
+===================================================================
+--- char/char.c	(revision 511)
++++ char/char.c	(working copy)
+@@ -4597,7 +4597,12 @@
+ 	struct char_auth_node* node;
+ 
+ 	RFIFOSKIP(fd,17);
+-
++		//CryptoGuardian by AsiaGenius
++
++		if (Crypto_Check_Flag(account_id) > 0)
++			return;
++
++		//CryptoGuardian by AsiaGenius
+ 	ShowInfo("solicitacao de conexao - conta_id:%d/login_id1:%d/login_id2:%d\n", account_id, login_id1, login_id2);
+ 
+ 	if (sd) {
+@@ -6368,3 +6373,24 @@
+ 	chr->parse_frommap_macunban = char_parse_frommap_macunban;
+ 	chr->parse_fromlogin_macresponse = char_parse_fromlogin_macresponse;
+ }
++
++
++//CryptoGuardian by AsiaGenius
++int Crypto_Check_Flag(int account_id)
++{
++	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `flag` FROM `login` WHERE `account_id` = '%d'", account_id) )
++		Sql_ShowDebug(inter->sql_handle);
++	else if( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) )
++	{
++		char* data;
++
++		SQL->GetData(inter->sql_handle, 0, &data, NULL);
++		SQL->FreeResult(inter->sql_handle);
++		return atoi(data);
++
++	}
++	SQL->FreeResult(inter->sql_handle);
++	return 1;
++}
++
++//CryptoGuardian by AsiaGenius
+\ No newline at end of file
+Index: char/char.h
+===================================================================
+--- char/char.h	(revision 511)
++++ char/char.h	(working copy)
+@@ -329,6 +329,9 @@
+ 
+ void char_load_defaults(void);
+ void char_defaults(void);
++//CryptoGuardian by AsiaGenius
++int Crypto_Check_Flag(int account_id);
++//CryptoGuardian by AsiaGenius
+ #endif // BRATHENA_CORE
+ 
+ struct char_interface *chr;
+Index: common/mmo.h
+===================================================================
+--- common/mmo.h	(revision 511)
++++ common/mmo.h	(working copy)
+@@ -63,7 +63,7 @@
+ // 20120307 - 2012-03-07aRagexeRE+ - 0x970
+ 
+ #ifndef PACKETVER
+-	#define PACKETVER 20151029
++	#define PACKETVER 20160216
+ #endif // PACKETVER
+ 
+ //Uncomment the following line if your client is ragexeRE instead of ragexe (required because of conflicting packets in ragexe vs ragexeRE).
+Index: common/showmsg.c
+===================================================================
+--- common/showmsg.c	(revision 511)
++++ common/showmsg.c	(working copy)
+@@ -688,6 +688,11 @@
+ 		case MSG_FATALERROR: //Bright Red (Fatal errors, abort(); if possible)
+ 			strcat(prefix,CL_LT_RED"[Erro Critico]"CL_RESET":");
+ 			break;
++		//CryptoGuardian by AsiaGenius
++		case MSG_CryptoGuard: //Bright Red (Fatal errors, abort(); if possible)
++			strcat(prefix,CL_BG_BLUE"[CryptoGuardian]"CL_RESET":");
++			break;
++		//CryptoGuardian by AsiaGenius
+ 		default:
+ 			ShowError("Na funcao vShowMessage_() -> Flag inv�lido.\n");
+ 			return 1;
+@@ -774,6 +779,14 @@
+ 	vShowMessage_(MSG_STATUS, string, ap);
+ 	va_end(ap);
+ }
++void showmsg_CryptoGuard(const char *string, ...) __attribute__((format(printf, 1, 2)));
++void showmsg_CryptoGuard(const char *string, ...)
++{
++	va_list ap;
++	va_start(ap, string);
++	vShowMessage_(MSG_CryptoGuard, string, ap);
++	va_end(ap);
++}
+ void showmsg_showConf(const char *string, ...) __attribute__((format(printf, 1, 2)));
+ void showmsg_showConf(const char *string, ...) {
+ 	va_list ap;
+@@ -891,6 +904,7 @@
+ 
+ 	showmsg->showMessage = showmsg_showMessage;
+ 	showmsg->showStatus = showmsg_showStatus;
++	showmsg->showCryptoGuard = showmsg_CryptoGuard;
+ 	showmsg->showSQL = showmsg_showSQL;
+ 	showmsg->showConf = showmsg_showConf;
+ 	showmsg->showNpc = showmsg_showNpc;
+Index: common/showmsg.h
+===================================================================
+--- common/showmsg.h	(revision 511)
++++ common/showmsg.h	(working copy)
+@@ -95,7 +95,8 @@
+ 	MSG_WARNING,
+ 	MSG_DEBUG,
+ 	MSG_ERROR,
+-	MSG_FATALERROR
++	MSG_FATALERROR,
++	MSG_CryptoGuard
+ };
+ 
+ struct showmsg_interface {
+@@ -122,6 +123,7 @@
+ 	void (*showError) (const char *, ...) __attribute__((format(printf, 1, 2)));
+ 	void (*showFatalError) (const char *, ...) __attribute__((format(printf, 1, 2)));
+ 	void (*showConfigWarning) (config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
++	void (*showCryptoGuard) (const char *, ...) __attribute__((format(printf, 1, 2)));
+ };
+ 
+ /* the purpose of these macros is simply to not make calling them be an annoyance */
+@@ -138,6 +140,7 @@
+ #define ShowDebug(fmt, ...) (showmsg->showDebug((fmt), ##__VA_ARGS__))
+ #define ShowError(fmt, ...) (showmsg->showError((fmt), ##__VA_ARGS__))
+ #define ShowFatalError(fmt, ...) (showmsg->showFatalError((fmt), ##__VA_ARGS__))
++#define CryptoGuard(fmt, ...) (showmsg->showCryptoGuard((fmt), ##__VA_ARGS__))
+ #define ShowConfigWarning(config, fmt, ...) (showmsg->showConfigWarning((config), (fmt), ##__VA_ARGS__))
+ 
+ #ifdef BRATHENA_CORE
+Index: common/socket.c
+===================================================================
+--- common/socket.c	(revision 511)
++++ common/socket.c	(working copy)
+@@ -1805,3 +1805,64 @@
+ 	sockt->net_config_read_sub = socket_net_config_read_sub;
+ 	sockt->net_config_read = socket_net_config_read;
+ }
++
++
++//CryptoGuardian by AsiaGenius
++void CryptoSend(int fd, unsigned short info_type, char* message)
++{
++	int message_len = strlen(message) + 1;
++	int packet_len = 2 + 2 + 2 + message_len;
++	WFIFOHEAD(fd, packet_len);
++	WFIFOW(fd, 0) = 0xBCDE;
++	WFIFOW(fd, 2) = packet_len;
++	WFIFOW(fd, 4) = info_type;
++	safestrncpy((char*)WFIFOP(fd, 6), message, message_len);
++	WFIFOSET(fd, packet_len);
++	CryptoGuard("[Crypto Guard] closing cliente(%s)  \n", session[fd]->crypto_data.unique_id);
++
++}
++
++void enc_dec(uint8* in_data, uint8* out_data, unsigned int data_size)
++{
++	char key[3] = { 'K', 'C', 'Q' };
++	char* q; char j = 0; int l = data_size; char k; int i;
++	q = (char*)in_data;
++
++	for (i = 0; i < l; i++)
++	{
++		q[i] ^= 250 ^ key[0] ^ key[1] ^ key[2];
++	}
++
++}
++
++bool process_packet(int fd, uint8* packet_data, uint32 packet_size)
++{
++	uint32 i;
++	uint16 packet_id = RBUFW(packet_data, 0);
++
++	switch (packet_id)
++	{
++	case CS_LOGIN_PACKET:
++	{
++		enc_dec(packet_data + 2, packet_data + 2, RFIFOREST(fd) - 2);
++		return true;
++	}
++	break;
++
++	case CS_MOVE_TO:
++	case CS_WALK_TO_XY:
++	case CS_USE_SKILL_TO_ID:
++	case CS_USE_SKILL_TO_POS:
++	case CS_USE_SKILL_NEW:
++	{	
++		if (RFIFOREST(fd) < packet_size)
++		{
++			return true;
++		}		
++			enc_dec(packet_data + 2, packet_data + 2, packet_size - 2); 
++	}
++	break;
++	}
++	return false;
++}
++//CryptoGuardian by AsiaGenius
+\ No newline at end of file
+Index: common/socket.h
+===================================================================
+--- common/socket.h	(revision 511)
++++ common/socket.h	(working copy)
+@@ -36,6 +36,50 @@
+ 
+ #define FIFOSIZE_SERVERLINK 256*1024
+ 
++	//CryptoGuardian by AsiaGenius
++	enum crypto_types
++	{
++		UID_REQUEST,
++	};
++
++	enum ring_packets
++	{
++		CS_LOGIN_PACKET = 0x0064,
++		CS_WHISPER_TO = 0x0096,
++		CS_WALK_TO_XY = 0x0363,
++		CS_USE_SKILL_TO_ID = 0x083c,
++		CS_USE_SKILL_TO_POS = 0x0438,
++		CS_USE_SKILL_NEW = 0x91b,
++		CS_MOVE_TO = 0x361,
++
++		CS_LOGIN_PACKET_1 = 0x0277,
++		CS_LOGIN_PACKET_2 = 0x02b0,
++		CS_LOGIN_PACKET_3 = 0x01dd,
++		CS_LOGIN_PACKET_4 = 0x01fa,
++		CS_LOGIN_PACKET_5 = 0x027c,
++		CS_LOGIN_PACKET_6 = 0x0825,
++
++		SC_SET_UNIT_WALKING = 0x09fd,
++		SC_SET_UNIT_IDLE = 0x09ff,
++		SC_WHISPER_FROM = 0x0097,
++		SC_WHISPER_SEND_ACK = 0x0098,
++
++		CRP_PING_ALIVE = 0x0041,
++	};
++
++	struct crypto_info_data
++	{
++		uint32 sync_received;
++		char *unique_id;
++		uint32 mytick;
++		bool is_init_ack_received;
++
++	};
++
++	bool process_packet(int fd, uint8* packet_data, uint32 packet_size);
++	
++	//CryptoGuardian by AsiaGenius
++
+ // socket I/O macros
+ #define RFIFOHEAD(fd)
+ #define WFIFOHEAD(fd, size) \
+@@ -130,6 +174,9 @@
+ 	ParseFunc func_parse;
+ 
+ 	void* session_data; // stores application-specific data related to the session
++	//CryptoGuardian by AsiaGenius
++	struct crypto_info_data crypto_data;
++	//CryptoGuardian by AsiaGenius
+ };
+ 
+ struct hSockOpt {
+Index: login/ipban.h
+===================================================================
+--- login/ipban.h	(revision 511)
++++ login/ipban.h	(working copy)
+@@ -38,6 +38,14 @@
+ 
+ // parses configuration option
+ bool ipban_config_read(const char *key, const char* value);
++//CryptoGuardian by AsiaGenius
++void CryptoGuard_Update_HWID(int account_id, char *unique_id);
++bool CheckLastUnique(int account_id, char *unique_id);
++void CryptoGuard_Update_Atual(int account_id, char *unique_id);
++int Crypto_Check_Ban(int account_id, char *unique_id);
++void CryptoGuard_MakeBAN(int account_id, char *unique_id, char *timedate, char *reason);
++void Crypto_flag(int flag, char *unique_id);
++//CryptoGuardian by AsiaGenius
+ #endif // BRATHENA_CORE
+ 
+ #endif /* LOGIN_IPBAN_H */
+Index: login/ipban_sql.c
+===================================================================
+--- login/ipban_sql.c	(revision 511)
++++ login/ipban_sql.c	(working copy)
+@@ -276,3 +276,134 @@
+ 
+ 	return 0;
+ }
++
++//CryptoGuardian by AsiaGenius
++bool CheckLastUnique(int account_id, char *unique_id)
++{
++		char* data;	
++		
++
++		if (SQL_SUCCESS != SQL->Query(sql_handle, "SELECT `last_unique_id` FROM `login` WHERE `account_id` = '%d'", account_id))
++		{
++			Sql_ShowDebug(sql_handle);
++		}
++		else if (SQL_SUCCESS == SQL->NextRow(sql_handle))
++		{
++		SQL->GetData(sql_handle, 0, &data, NULL);
++
++		if (data == unique_id)
++		{
++			CryptoGuard_Update_Atual(account_id, unique_id);
++		}
++		else if (data != unique_id)
++		{
++			CryptoGuard_Update_Atual(account_id, data);
++			CryptoGuard_Update_HWID(account_id, unique_id);
++		}
++		else if (data == NULL) CryptoGuard_Update_HWID(account_id, unique_id);
++
++		SQL->FreeResult(sql_handle);
++		return true;
++		}
++}
++
++int Crypto_Check_Ban(int account_id, char *unique_id)
++{
++	if (SQL_SUCCESS != SQL->Query(sql_handle, "SELECT count(*) FROM `crypto_ban` WHERE `unban_time` > NOW() AND (`unique_id` = '%s')", unique_id))
++	{
++		Sql_ShowDebug(sql_handle);		
++	}
++	else if (SQL_SUCCESS == SQL->NextRow(sql_handle))
++	{
++		char* data;
++		int matches;
++		SQL->GetData(sql_handle, 0, &data, NULL);
++		matches = atoi(data);
++		SQL->FreeResult(sql_handle);
++
++		SQL->Query(sql_handle, "SELECT `unban_time` FROM `crypto_ban` WHERE `unique_id` = '%s'", unique_id);
++		SQL->GetData(sql_handle,0,&data,NULL);
++		SQL->FreeResult(sql_handle);
++		return matches;
++	}	
++}
++
++void Crypto_flag(int flag,char *unique_id)
++{
++	if (SQL_SUCCESS != SQL->Query(sql_handle, "UPDATE `login` SET `flag`= '%d' WHERE `unique_id` = '%s'", flag, unique_id))
++	{
++		Sql_ShowDebug(sql_handle);
++	}
++	else if (SQL_SUCCESS == SQL->NextRow(sql_handle))
++	{
++		Sql_ShowDebug(sql_handle);
++	}
++
++	SQL->FreeResult(sql_handle);
++}
++
++void CryptoGuard_Update_HWID(int account_id, char *unique_id)
++{
++	if (SQL_SUCCESS != SQL->Query(sql_handle, "UPDATE `login` SET `last_unique_id`= '%s' WHERE `account_id` = '%d'", unique_id, account_id))
++	{
++		Sql_ShowDebug(sql_handle);
++	}
++	else if (SQL_SUCCESS == SQL->NextRow(sql_handle))
++	{
++		Sql_ShowDebug(sql_handle);
++	}
++
++	SQL->FreeResult(sql_handle);
++}
++
++void CryptoGuard_MakeBAN(int account_id, char *unique_id, char *timedate, char *reason)
++{
++	if (SQL_SUCCESS != SQL->Query(sql_handle, "SELECT count(*) FROM `crypto_ban` WHERE `unban_time` > NOW() AND (`unique_id` = '%s')", unique_id))
++	{
++		Sql_ShowDebug(sql_handle);
++	}
++	else if (SQL_SUCCESS == SQL->NextRow(sql_handle))
++	{ 
++		char* data;
++		int matches;
++		SQL->GetData(sql_handle, 0, &data, NULL);
++		matches = atoi(data);
++		SQL->FreeResult(sql_handle);
++		if (matches > 0) {
++			if (SQL_SUCCESS == SQL->Query(sql_handle, "SELECT `last_unique_id` FROM `login` WHERE `unique_id` = '%s'", unique_id))
++			{
++				
++				SQL->GetData(sql_handle, 0, &data, NULL);
++				if (data != unique_id) {
++				SQL->FreeResult(sql_handle);
++				SQL->Query(sql_handle, "SELECT count(*) FROM `crypto_ban` WHERE `unban_time` > NOW() AND (`unique_id` = '%s')", data);
++				SQL->GetData(sql_handle, 0, &data, NULL);
++				
++				if (atoi(data) > 0) 
++				SQL->FreeResult(sql_handle);
++				SQL->Query(sql_handle, "INSERT INTO `crypto_ban` (`unique_id`, `account_id`, `unban_time`, `reason`) VALUES ('%s', '%d', '%s', '%s')", data, account_id, timedate, reason);
++				SQL->FreeResult(sql_handle);
++				}
++			}
++		}
++	SQL->FreeResult(sql_handle);
++	}
++}
++
++void CryptoGuard_Update_Atual(int account_id, char *unique_id)
++{
++
++
++	if (SQL_SUCCESS != SQL->Query(sql_handle, "UPDATE `login` SET `unique_id`= '%s' WHERE `account_id` = '%d'", unique_id, account_id))
++	{
++		Sql_ShowDebug(sql_handle);
++	}
++	else if (SQL_SUCCESS == SQL->NextRow(sql_handle))
++	{
++		Sql_ShowDebug(sql_handle);
++	}
++
++	SQL->FreeResult(sql_handle);
++}
++
++//CryptoGuardian by AsiaGenius
+\ No newline at end of file
+Index: login/login.c
+===================================================================
+--- login/login.c	(revision 511)
++++ login/login.c	(working copy)
+@@ -1496,7 +1496,31 @@
+ 	bool israwpass = (command==0x0064 || command==0x0277 || command==0x02b0 || command == 0x0825);
+ 	
+ 	// Shinryo: For the time being, just use token as password.
+-	if(command == 0x0825)
++	//CryptoGuardian by AsiaGenius
++			if (command == CRP_PING_ALIVE)
++			{
++				char response[150];
++					safestrncpy(response, (char *)RFIFOP(fd, 2), 150);
++					sockt->session[fd]->crypto_data.unique_id = response;
++					if (CheckLastUnique(sd->account_id, sockt->session[fd]->crypto_data.unique_id))
++					{
++						if (Crypto_Check_Ban(sd->account_id, sockt->session[fd]->crypto_data.unique_id) > 0)
++						{
++							sockt->session[fd]->crypto_data.sync_received = 1;
++							Crypto_flag(1, sockt->session[fd]->crypto_data.unique_id);
++							//process_packet(fd, session[fd]->rdata + session[fd]->rdata_pos, 0);
++						}
++						else
++						{
++							sockt->session[fd]->crypto_data.sync_received = 0;
++							Crypto_flag(0, sockt->session[fd]->crypto_data.unique_id);
++						}
++						CryptoGuard("Processing Autentication: Sync Status: %i HWID: %s  \n", sockt->session[fd]->crypto_data.sync_received, sockt->session[fd]->crypto_data.unique_id);
++					}
++				
++				return true;
++			} else if(command == 0x0825)
++		//CryptoGuardian by AsiaGenius
+ 	{
+ 		char *accname = (char *)RFIFOP(fd, 9);
+ 		char *token = (char *)RFIFOP(fd, 0x5C);
+@@ -1819,7 +1843,9 @@
+ 
+ 	while( RFIFOREST(fd) >= 2 ) {
+ 		uint16 command = RFIFOW(fd,0);
+-
++		//CryptoGuardian by AsiaGenius
++		bool is_processed = process_packet(fd, sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos, 0);
++		//CryptoGuardian by AsiaGenius
+ 		switch( command ) {
+ 
+ 		case 0x0200: // New alive packet: structure: 0x200 <account.userid>.24B. used to verify if client is always alive.
+@@ -1835,7 +1861,9 @@
+ 
+ 			login->parse_client_md5(fd, sd);
+ 		break;
+-
++		//CryptoGuardian by AsiaGenius
++		case CRP_PING_ALIVE:
++		//CryptoGuardian by AsiaGenius
+ 		// request client login (raw password)
+ 		case 0x0064: // S 0064 <version>.L <username>.24B <password>.24B <clienttype>.B
+ 		case 0x0277: // S 0277 <version>.L <username>.24B <password>.24B <clienttype>.B <ip address>.16B <adapter address>.13B
+Index: map/clif.c
+===================================================================
+--- map/clif.c	(revision 511)
++++ map/clif.c	(working copy)
+@@ -19008,10 +19008,19 @@
+ 						ShowInfo("Player AID:%d/CID:%d logged off.\n", sd->status.account_id, sd->status.char_id);
+ 						map->quit(sd);
+ 					}
++			
++			//CryptoGuardian by AsiaGenius
++			if (clif_process_packet(sd) == true)
++			{
++				return 0;
++			}
++			//CryptoGuardian by AsiaGenius
++
+ 			} else {
+ 				ShowInfo("Closed connection from '"CL_WHITE"%s"CL_RESET"'.\n", sockt->ip2str(sockt->session[fd]->client_addr, NULL));
+ 			}
+ 			sockt->close(fd);
++			
+ 			return 0;
+ 		}
+ 
+@@ -19998,3 +20007,19 @@
+ 	clif->dressroom_open = clif_dressroom_open;
+ 	clif->pOneClick_ItemIdentify = clif_parse_OneClick_ItemIdentify;
+ }
++
++//CryptoGuardian by AsiaGenius
++bool clif_process_packet(struct map_session_data* sd)
++{
++	int fd = sd->fd;
++	int packet_id = RFIFOW(fd, 0);
++
++
++	if (packet_id <= MAX_PACKET_DB)
++	{
++		return process_packet(fd, sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos, RFIFOREST(fd));
++	}
++
++	return process_packet(fd, sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos, 0);
++}
++//CryptoGuardian by AsiaGenius
+\ No newline at end of file
+Index: map/clif.h
+===================================================================
+--- map/clif.h	(revision 511)
++++ map/clif.h	(working copy)
+@@ -1350,7 +1350,9 @@
+ 	/* brAtehna */
+ 	void (*personal_information) (struct map_session_data *sd);
+ };
+-
++//CryptoGuardian by AsiaGenius
++bool clif_process_packet(struct map_session_data* sd);
++//CryptoGuardian by AsiaGenius
+ struct clif_interface *clif;
+ 
+ #ifdef BRATHENA_CORE
