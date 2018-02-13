@@ -165,7 +165,7 @@ Index: common/socket.c
 +
 +void enc_dec(uint8* in_data, uint8* out_data, unsigned int data_size)
 + {
-+	char key[3] = { 'K', 'C', 'Q' };
++	char key[3] = {'0011', '0110', '0011'};	//00110111,01100101,00110000
 +	char* q; char j = 0; int l = data_size; char k; int i;
 +	q = (char*)in_data;
 +	
