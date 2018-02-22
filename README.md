@@ -19,6 +19,11 @@ Packet Transmission Schema:
 
 ![enter image description here](https://image.prntscr.com/image/OGbL2IxeR_2EOCAl8HrLIQ.png)
 
+## Terms of use ##
+- Report bypass should be done privately to a DevTeam or directly to AsiaGenius.
+- Any undetectable new cheat should be reported to the immediate anti-cheat database.
+- Any attempt to fraud will result in loss of access to our project.
+- We are willing to negotiate bypass depending on gravity, our intention is to add all bypass blockage that exist.
 
 ## Link Base
 Site: https://cryptoguardian.net
